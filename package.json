@@ -1,0 +1,76 @@
+{
+  "name": "mattermost-mcp-server",
+  "version": "0.0.1",
+  "description": "A Model Context Protocol server for Mattermost",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "build": "tsc",
+    "postbuild": "chmod +x dist/main.js",
+    "lint": "eslint src/**",
+    "lint:fix": "eslint src/** --fix",
+    "format": "prettier --write \"**/*.{ts,json,md,yml,js}\"",
+    "format:check": "prettier --check .",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "test:watch": "node --import tsx --test --watch tests/**/*.test.ts",
+    "inspect": "pnpx @modelcontextprotocol/inspector",
+    "fix": "pnpm format && pnpm lint:fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kakehashi-inc/mattermost-mcp-server.git"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "mattermost",
+    "fetch"
+  ],
+  "author": "jp-yendo",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "bugs": {
+    "url": "https://github.com/kakehashi-inc/mattermost-mcp-server/issues"
+  },
+  "homepage": "https://github.com/kakehashi-inc/mattermost-mcp-server#readme",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.0",
+    "express": "^5.0.1",
+    "linkedom": "^0.18.9",
+    "lru.min": "^1.1.1",
+    "robots-parser": "^3.0.1",
+    "sanitize-html": "^2.14.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@codedependant/semantic-release-docker": "^5.1.0",
+    "@eslint/js": "^9.21.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.5",
+    "@types/sanitize-html": "^2.13.0",
+    "@types/turndown": "^5.0.5",
+    "eslint": "^9.21.0",
+    "prettier": "^3.5.2",
+    "semantic-release": "^24.2.3",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0"
+  },
+  "overrides": {
+    "esbuild": ">=0.25.0"
+  }
+}
