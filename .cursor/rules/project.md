@@ -1,13 +1,9 @@
 # 本プロジェクトについて
 
 本プロジェクトはMCP(Model Context Protocol)サーバーの開発のためのプロジェクトです。
+MattermostのAPIエンドポイントに接続し、各種情報を取得することを主な目的とします。
 
 以下のタイプを標準トランスポートを実装するものとします。
 
 - sdtio
 - sse
-
-サポートする接続先
-
-- Mattermost
-- fetch http/https
