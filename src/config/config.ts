@@ -6,8 +6,9 @@ export const argsSchema = z.object({
   token: z.string(),
   'team-id': z.string(),
   channels: z.array(z.string().optional()),
-  limit: z.number().optional().default(100),
-  port: z.coerce.number().optional().default(8080),
+  limit: z.coerce.number().optional().default(100),
+  stdio: z.boolean().optional().default(false),
+  port: z.coerce.number().optional().default(8202),
 });
 
 export type Config = z.infer<typeof argsSchema>;

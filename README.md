@@ -1,14 +1,21 @@
 # mattermost-mcp-server
 
-This project is for developing an MCP (Model Context Protocol) server.
-The main purpose is to connect to Mattermost API endpoints and retrieve various information.
-
-The following types will implement standard transport.
-
-- sdtio
-- sse
+This project implements a Model Context Protocol (MCP) server for Mattermost integration. It connects to Mattermost API endpoints to retrieve and process various information, making it available through standard MCP transports.
 
 ## Features
+
+- Connects to Mattermost API endpoints
+- Supports multiple transport modes:
+  - SSE (Server-Sent Events)
+  - Standard I/O
+- Real-time message processing
+- Team and channel-specific monitoring
+- Secure token-based authentication
+
+## Requirements
+
+- Node.js >= 22
+- pnpm >= 10
 
 ## Setup
 
@@ -22,17 +29,59 @@ cd mattermost-mcp-server
 2. Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 3. Build the server:
 
 ```bash
-npm run build
+pnpm build
 ```
 
-4. Run the server:
+## Usage
+
+The server can be run in two transport modes:
+
+### SSE Transport Mode
 
 ```bash
-npm start
+pnpm start -- --endpoint="https://your-mattermost-server" \
+              --token="your-mattermost-token" \
+              --team-id="your-team-id" \
+              --channels="channel1,channel2" \
+              --port 8202
 ```
+
+### Standard I/O Transport Mode
+
+```bash
+pnpm start -- --endpoint="https://your-mattermost-server" \
+              --token="your-mattermost-token" \
+              --team-id="your-team-id" \
+              --channels="channel1,channel2" \
+              --stdio
+```
+
+### Required Parameters
+
+- `endpoint`: Your Mattermost server URL
+- `token`: Your Mattermost authentication token
+- `team-id`: The ID of the team to monitor
+- `channels`: Comma-separated list of channel names to monitor
+
+### Optional Parameters
+
+- `port`: Port number for SSE transport mode (default: 8202)
+- `stdio`: Flag to enable Standard I/O transport mode
+
+## Development
+
+- `pnpm dev`: Start the server in development mode with hot reload
+- `pnpm lint`: Run ESLint
+- `pnpm format`: Format code using Prettier
+- `pnpm test`: Run tests
+- `pnpm inspect`: Run MCP inspector
+
+## License
+
+MIT

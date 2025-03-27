@@ -1,38 +1,87 @@
 # mattermost-mcp-server
 
-本プロジェクトはMCP(Model Context Protocol)サーバーの開発のためのプロジェクトです。
-MattermostのAPIエンドポイントに接続し、各種情報を取得することを主な目的とします。
+このプロジェクトは、Mattermostとの統合のためのModel Context Protocol (MCP)サーバーを実装します。MattermostのAPIエンドポイントに接続し、各種情報を取得・処理して、標準MCPトランスポートを通じて提供します。
 
-以下のタイプを標準トランスポートを実装するものとします。
+## 機能
 
-- sdtio
-- sse
+- MattermostのAPIエンドポイントへの接続
+- 複数のトランスポートモードをサポート：
+  - SSE（Server-Sent Events）
+  - 標準入出力
+- リアルタイムメッセージ処理
+- チームとチャンネル単位のモニタリング
+- セキュアなトークンベースの認証
 
-## Features
+## 必要条件
 
-## Setup
+- Node.js >= 22
+- pnpm >= 10
 
-1. Clone this repository:
+## セットアップ
+
+1. リポジトリのクローン：
 
 ```bash
 git clone https://github.com/kakehashi-inc/mattermost-mcp-server.git
 cd mattermost-mcp-server
 ```
 
-2. Install dependencies:
+2. 依存関係のインストール：
 
 ```bash
-npm install
+pnpm install
 ```
 
-3. Build the server:
+3. サーバーのビルド：
 
 ```bash
-npm run build
+pnpm build
 ```
 
-4. Run the server:
+## 使用方法
+
+サーバーは2つのトランスポートモードで実行できます：
+
+### SSEトランスポートモード
 
 ```bash
-npm start
+pnpm start -- --endpoint="https://your-mattermost-server" \
+              --token="your-mattermost-token" \
+              --team-id="your-team-id" \
+              --channels="channel1,channel2" \
+              --port 8202
 ```
+
+### 標準入出力トランスポートモード
+
+```bash
+pnpm start -- --endpoint="https://your-mattermost-server" \
+              --token="your-mattermost-token" \
+              --team-id="your-team-id" \
+              --channels="channel1,channel2" \
+              --stdio
+```
+
+### 必須パラメータ
+
+- `endpoint`: MattermostサーバーのURL
+- `token`: Mattermostの認証トークン
+- `team-id`: モニタリング対象のチームID
+- `channels`: モニタリング対象のチャンネル名（カンマ区切り）
+
+### オプションパラメータ
+
+- `port`: SSEトランスポートモードのポート番号（デフォルト: 8202）
+- `stdio`: 標準入出力トランスポートモードを有効にするフラグ
+
+## 開発
+
+- `pnpm dev`: ホットリロード付きの開発モードでサーバーを起動
+- `pnpm lint`: ESLintを実行
+- `pnpm format`: Prettierでコードをフォーマット
+- `pnpm test`: テストを実行
+- `pnpm inspect`: MCPインスペクターを実行
+
+## ライセンス
+
+MIT
