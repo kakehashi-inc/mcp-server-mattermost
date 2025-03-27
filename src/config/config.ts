@@ -5,7 +5,10 @@ export const argsSchema = z.object({
   endpoint: z.string(),
   token: z.string(),
   'team-id': z.string(),
-  channels: z.array(z.string().optional()),
+  channels: z
+    .string()
+    .transform(val => (val ? val.split(',').filter(Boolean) : undefined))
+    .optional(),
   limit: z.coerce.number().optional().default(100),
   stdio: z.boolean().optional().default(false),
   port: z.coerce.number().optional().default(8202),

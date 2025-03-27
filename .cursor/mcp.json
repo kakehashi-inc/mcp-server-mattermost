@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mattermost": {
+      "type": "http",
+      "url": "http://localhost:8202"
+    }
+  }
+}

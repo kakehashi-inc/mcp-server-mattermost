@@ -15,12 +15,14 @@ if [ ! -f .env ]; then
 fi
 
 # Load environment variables from .env
-export $(cat .env | grep -v '^#' | xargs)
+set -a
+source .env
+set +a
 
 # Start the server
-node --import tsx src/main.ts \
-  --endpoint="$MATTERMOST_ENDPOINT" \
-  --token="$MATTERMOST_TOKEN" \
-  --team-id="$MATTERMOST_TEAM_ID" \
-  ${MATTERMOST_CHANNELS:+--channels="$MATTERMOST_CHANNELS"} \
-  ${MATTERMOST_PORT:+--port="$MATTERMOST_PORT"}
+npx tsx src/main.ts \
+  --endpoint "$MATTERMOST_ENDPOINT" \
+  --token "$MATTERMOST_TOKEN" \
+  --team-id "$MATTERMOST_TEAM_ID" \
+  ${MATTERMOST_CHANNELS:+--channels "$MATTERMOST_CHANNELS"} \
+  ${MATTERMOST_PORT:+--port "$MATTERMOST_PORT"}
