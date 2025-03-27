@@ -1,12 +1,7 @@
 import { z, ZodTypeAny } from 'zod';
 import { config } from './config/config.js';
-import { DEFAULT_USER_AGENT_AUTONOMOUS } from './constants.js';
-import { checkRobotsTxt } from './utils/check-robots-txt.js';
-import { cache } from './utils/lru-cache.js';
-import { paginate } from './utils/paginate.js';
-import { processURL } from './utils/process-url.js';
 
-const name = 'fetch';
+const name = 'mattermost';
 
 const description = `Fetches a URL from the internet and optionally extracts its contents as markdown.`;
 
@@ -25,14 +20,14 @@ const parameters = {
     .min(0)
     .default(0)
     .describe(
-      'Return output starting at this character index, useful if a previous fetch was truncated and more context is required. Default: 0.',
+      'Return output starting at this character index, useful if a previous fetch was truncated and more context is required. Default: 0.'
     ),
 
   raw: z
     .boolean()
     .default(false)
     .describe(
-      'Get the actual HTML content of the requested page, without simplification. Default: false.',
+      'Get the actual HTML content of the requested page, without simplification. Default: false.'
     ),
 };
 
@@ -67,7 +62,7 @@ const execute =
     };
   };
 
-export const fetchTool = {
+export const mattermostTool = {
   name,
   description,
   parameters,

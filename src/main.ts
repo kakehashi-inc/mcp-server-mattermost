@@ -7,26 +7,26 @@ import { stdin as input, stdout as output } from 'node:process';
 import { createInterface } from 'node:readline/promises';
 import { promisify } from 'node:util';
 import { config } from './config/config.js';
-import { fetchPrompt } from './fetch.prompt.js';
-import { fetchTool } from './fetch.tool.js';
+import { mattermostPrompt } from './mattermost.prompt.js';
+import { mattermostTool } from './mattermost.tool.js';
 
 const mcp = new McpServer({
-  name: 'mcp-fetch-node',
-  version: '1.x.x',
+  name: process.env.npm_package_name ?? 'mattermost-mcp-server',
+  version: process.env.npm_package_version ?? '0.0.1',
 });
 
 mcp.tool(
-  fetchTool.name,
-  fetchTool.description,
-  fetchTool.parameters,
-  fetchTool.execute,
+  mattermostTool.name,
+  mattermostTool.description,
+  mattermostTool.parameters,
+  mattermostTool.execute
 );
 
 mcp.prompt(
-  fetchPrompt.name,
-  fetchPrompt.description,
-  fetchPrompt.parameters,
-  fetchPrompt.execute,
+  mattermostPrompt.name,
+  mattermostPrompt.description,
+  mattermostPrompt.parameters,
+  mattermostPrompt.execute
 );
 
 const app = express();

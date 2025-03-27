@@ -1,9 +1,9 @@
 # mattermost-mcp-server
 
-This project is for developing an MCP (Model Context Protocol) server.
-The main purpose is to connect to Mattermost API endpoints and retrieve various information.
+本プロジェクトはMCP(Model Context Protocol)サーバーの開発のためのプロジェクトです。
+MattermostのAPIエンドポイントに接続し、各種情報を取得することを主な目的とします。
 
-The following types will implement standard transport.
+以下のタイプを標準トランスポートを実装するものとします。
 
 - sdtio
 - sse

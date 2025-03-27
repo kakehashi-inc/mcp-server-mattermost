@@ -4,6 +4,9 @@
   "description": "A Model Context Protocol server for Mattermost",
   "type": "module",
   "main": "dist/main.js",
+  "bin": {
+    "mattermost-mcp-server": "dist/main.js"
+  },
   "scripts": {
     "start": "node dist/main.js",
     "dev": "tsx watch --clear-screen=false src/main.ts",
