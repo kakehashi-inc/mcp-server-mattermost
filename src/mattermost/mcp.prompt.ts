@@ -20,8 +20,7 @@ type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
 const execute = async ({ channels, limit, query }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
-  const targetChannels =
-    channels?.split(',') ?? config.channels.filter((c): c is string => c !== undefined);
+  const targetChannels = channels?.split(',') ?? config.channels ?? [];
   const messageLimit = limit ? parseInt(limit, 10) : config.limit;
 
   const messages = [];

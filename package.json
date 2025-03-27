@@ -18,8 +18,8 @@
     "format:check": "prettier --check .",
     "test": "node --import tsx --test tests/**/*.test.ts",
     "test:watch": "node --import tsx --test --watch tests/**/*.test.ts",
-    "inspect": "pnpx @modelcontextprotocol/inspector",
-    "fix": "pnpm format && pnpm lint:fix"
+    "inspect": "npx @modelcontextprotocol/inspector",
+    "fix": "npm format && npm lint:fix"
   },
   "repository": {
     "type": "git",
@@ -33,16 +33,13 @@
   ],
   "author": "jp-yendo",
   "license": "MIT",
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10"
-  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "README-ja.md"
   ],
   "bugs": {
     "url": "https://github.com/kakehashi-inc/mattermost-mcp-server/issues"
@@ -51,10 +48,12 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "axios": "^1.8.4",
+    "express": "^5.0.1",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
+    "@types/express": "^5.0.1",
     "@types/node": "^22.13.14",
     "eslint": "^9.23.0",
     "npm-check-updates": "^17.1.16",

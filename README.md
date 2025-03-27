@@ -15,7 +15,7 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 ## Requirements
 
 - Node.js >= 22
-- pnpm >= 10
+- npm >= 10
 
 ## Setup
 
@@ -29,13 +29,13 @@ cd mattermost-mcp-server
 2. Install dependencies:
 
 ```bash
-pnpm install
+npm install
 ```
 
 3. Build the server:
 
 ```bash
-pnpm build
+npm run build
 ```
 
 ## Usage
@@ -45,21 +45,21 @@ The server can be run in two transport modes:
 ### SSE Transport Mode
 
 ```bash
-pnpm start -- --endpoint="https://your-mattermost-server" \
-              --token="your-mattermost-token" \
-              --team-id="your-team-id" \
-              --channels="channel1,channel2" \
-              --port 8202
+npm start -- --endpoint="https://your-mattermost-server" \
+            --token="your-mattermost-token" \
+            --team-id="your-team-id" \
+            --channels="channel1,channel2" \
+            --port 8202
 ```
 
 ### Standard I/O Transport Mode
 
 ```bash
-pnpm start -- --endpoint="https://your-mattermost-server" \
-              --token="your-mattermost-token" \
-              --team-id="your-team-id" \
-              --channels="channel1,channel2" \
-              --stdio
+npm start -- --endpoint="https://your-mattermost-server" \
+            --token="your-mattermost-token" \
+            --team-id="your-team-id" \
+            --channels="channel1,channel2" \
+            --stdio
 ```
 
 ### Required Parameters
@@ -76,11 +76,11 @@ pnpm start -- --endpoint="https://your-mattermost-server" \
 
 ## Development
 
-- `pnpm dev`: Start the server in development mode with hot reload
-- `pnpm lint`: Run ESLint
-- `pnpm format`: Format code using Prettier
-- `pnpm test`: Run tests
-- `pnpm inspect`: Run MCP inspector
+- `npm run dev`: Start the server in development mode with hot reload
+- `npm run lint`: Run ESLint
+- `npm run format`: Format code using Prettier
+- `npm test`: Run tests
+- `npm run inspect`: Run MCP inspector
 
 ## License
 
