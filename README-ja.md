@@ -16,6 +16,8 @@
 
 - Node.js >= 22
 - npm >= 10
+- dotenvx
+  - [dotenvx](https://dotenvx.com/)
 
 ## セットアップ
 
@@ -32,7 +34,25 @@ cd mattermost-mcp-server
 npm install
 ```
 
-3. サーバーのビルド：
+3. 環境変数の設定：
+
+```bash
+# .envファイルの作成
+cp .env.example .env
+
+# .envファイルの暗号化（本番環境では推奨）
+dotenvx encrypt
+```
+
+必要な環境変数：
+
+- `MCP_PORT`: SSEトランスポートモードのポート番号（デフォルト: 8201）
+- `MATTERMOST_ENDPOINT`: MattermostサーバーのURL
+- `MATTERMOST_TOKEN`: Mattermostの認証トークン
+- `MATTERMOST_TEAM_ID`: モニタリング対象のチームID
+- `MATTERMOST_CHANNELS`: モニタリング対象のチャンネル名（カンマ区切り）
+
+4. サーバーのビルド：
 
 ```bash
 npm run build
@@ -45,34 +65,14 @@ npm run build
 ### SSEトランスポートモード
 
 ```bash
-npm start -- --endpoint="https://your-mattermost-server" \
-            --token="your-mattermost-token" \
-            --team-id="your-team-id" \
-            --channels="channel1,channel2" \
-            --port 8201
+npm start
 ```
 
 ### 標準入出力トランスポートモード
 
 ```bash
-npm start -- --endpoint="https://your-mattermost-server" \
-            --token="your-mattermost-token" \
-            --team-id="your-team-id" \
-            --channels="channel1,channel2" \
-            --stdio
+npm start -- --stdio
 ```
-
-### 必須パラメータ
-
-- `endpoint`: MattermostサーバーのURL
-- `token`: Mattermostの認証トークン
-- `team-id`: モニタリング対象のチームID
-- `channels`: モニタリング対象のチャンネル名（カンマ区切り）
-
-### オプションパラメータ
-
-- `port`: SSEトランスポートモードのポート番号（デフォルト: 8201）
-- `stdio`: 標準入出力トランスポートモードを有効にするフラグ
 
 ## 開発
 
@@ -81,6 +81,10 @@ npm start -- --endpoint="https://your-mattermost-server" \
 - `npm run format`: Prettierでコードをフォーマット
 - `npm test`: テストを実行
 - `npm run inspect`: MCPインスペクターを実行
+
+## 参考サイト
+
+- [Model Context Protocol TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
 
 ## ライセンス
 

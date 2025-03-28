@@ -11,18 +11,9 @@ if [ ! -f .env ]; then
   echo "Optional environment variables:"
   echo "  MATTERMOST_CHANNELS - Comma-separated channel IDs"
   echo "  MATTERMOST_PORT     - Server port"
+  echo "  MATTERMOST_LIMIT    - Number of messages to fetch"
   exit 1
 fi
 
-# Load environment variables from .env
-set -a
-source .env
-set +a
-
 # Start the server
-npx tsx src/main.ts \
-  --endpoint "$MATTERMOST_ENDPOINT" \
-  --token "$MATTERMOST_TOKEN" \
-  --team-id "$MATTERMOST_TEAM_ID" \
-  ${MATTERMOST_CHANNELS:+--channels "$MATTERMOST_CHANNELS"} \
-  ${MATTERMOST_PORT:+--port "$MATTERMOST_PORT"}
+dotenvx run -q -- npx tsx src/main.ts

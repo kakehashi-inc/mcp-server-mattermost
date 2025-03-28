@@ -8,8 +8,8 @@
     "mattermost-mcp-server": "dist/main.js"
   },
   "scripts": {
-    "start": "node dist/main.js",
-    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "start": "dotenvx run -q -- node dist/main.js",
+    "dev": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts",
     "build": "tsc",
     "postbuild": "chmod +x dist/main.js",
     "lint": "eslint src/**",

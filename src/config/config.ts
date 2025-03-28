@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { parseEnvs } from '../utils/parse-envs.js';
 import { parseArgs } from '../utils/parse-args.js';
 
 export const argsSchema = z.object({
@@ -16,4 +17,7 @@ export const argsSchema = z.object({
 
 export type Config = z.infer<typeof argsSchema>;
 
-export const config = argsSchema.parse(parseArgs());
+const args = parseArgs();
+const envs = parseEnvs();
+
+export const config = argsSchema.parse({ ...envs, ...args });

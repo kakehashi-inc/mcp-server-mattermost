@@ -16,6 +16,8 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 
 - Node.js >= 22
 - npm >= 10
+- dotenvx
+  - [dotenvx](https://dotenvx.com/)
 
 ## Setup
 
@@ -32,7 +34,25 @@ cd mattermost-mcp-server
 npm install
 ```
 
-3. Build the server:
+3. Set up your environment variables:
+
+```bash
+# Create .env file
+cp .env.example .env
+
+# Encrypt your .env file (optional but recommended for production)
+dotenvx encrypt
+```
+
+Required environment variables:
+
+- `MCP_PORT`: Port number for SSE transport mode (default: 8201)
+- `MATTERMOST_ENDPOINT`: Your Mattermost server URL
+- `MATTERMOST_TOKEN`: Your Mattermost authentication token
+- `MATTERMOST_TEAM_ID`: The ID of the team to monitor
+- `MATTERMOST_CHANNELS`: Comma-separated list of channel names to monitor
+
+4. Build the server:
 
 ```bash
 npm run build
@@ -45,34 +65,14 @@ The server can be run in two transport modes:
 ### SSE Transport Mode
 
 ```bash
-npm start -- --endpoint="https://your-mattermost-server" \
-            --token="your-mattermost-token" \
-            --team-id="your-team-id" \
-            --channels="channel1,channel2" \
-            --port 8201
+npm start
 ```
 
 ### Standard I/O Transport Mode
 
 ```bash
-npm start -- --endpoint="https://your-mattermost-server" \
-            --token="your-mattermost-token" \
-            --team-id="your-team-id" \
-            --channels="channel1,channel2" \
-            --stdio
+npm start -- --stdio
 ```
-
-### Required Parameters
-
-- `endpoint`: Your Mattermost server URL
-- `token`: Your Mattermost authentication token
-- `team-id`: The ID of the team to monitor
-- `channels`: Comma-separated list of channel names to monitor
-
-### Optional Parameters
-
-- `port`: Port number for SSE transport mode (default: 8201)
-- `stdio`: Flag to enable Standard I/O transport mode
 
 ## Development
 
@@ -81,6 +81,10 @@ npm start -- --endpoint="https://your-mattermost-server" \
 - `npm run format`: Format code using Prettier
 - `npm test`: Run tests
 - `npm run inspect`: Run MCP inspector
+
+## References
+
+- [Model Context Protocol TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
 
 ## License
 

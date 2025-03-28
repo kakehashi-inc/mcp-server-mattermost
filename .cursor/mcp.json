@@ -2,6 +2,13 @@
   "mcpServers": {
     "mattermost": {
       "url": "http://localhost:8201"
+    },
+    "mattermost-stdio": {
+      "command": "bash",
+      "args": [
+        "-c",
+        "'dotenvx run -q -- node dist/main.js --stdio'"
+      ]
     }
   }
 }
