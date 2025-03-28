@@ -6,7 +6,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Default test values
-DEFAULT_PORT=8202
+DEFAULT_PORT=8201
 DEFAULT_ENDPOINT="http://localhost:8065"
 DEFAULT_TOKEN="test-token"
 DEFAULT_TEAM_ID="test-team"

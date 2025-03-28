@@ -11,7 +11,7 @@ export const argsSchema = z.object({
     .optional(),
   limit: z.coerce.number().optional().default(100),
   stdio: z.boolean().optional().default(false),
-  port: z.coerce.number().optional().default(8202),
+  port: z.coerce.number().optional().default(8201),
 });
 
 export type Config = z.infer<typeof argsSchema>;

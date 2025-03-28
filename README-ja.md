@@ -49,7 +49,7 @@ npm start -- --endpoint="https://your-mattermost-server" \
             --token="your-mattermost-token" \
             --team-id="your-team-id" \
             --channels="channel1,channel2" \
-            --port 8202
+            --port 8201
 ```
 
 ### 標準入出力トランスポートモード
@@ -71,7 +71,7 @@ npm start -- --endpoint="https://your-mattermost-server" \
 
 ### オプションパラメータ
 
-- `port`: SSEトランスポートモードのポート番号（デフォルト: 8202）
+- `port`: SSEトランスポートモードのポート番号（デフォルト: 8201）
 - `stdio`: 標準入出力トランスポートモードを有効にするフラグ
 
 ## 開発

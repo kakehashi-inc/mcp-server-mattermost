@@ -49,7 +49,7 @@ npm start -- --endpoint="https://your-mattermost-server" \
             --token="your-mattermost-token" \
             --team-id="your-team-id" \
             --channels="channel1,channel2" \
-            --port 8202
+            --port 8201
 ```
 
 ### Standard I/O Transport Mode
@@ -71,7 +71,7 @@ npm start -- --endpoint="https://your-mattermost-server" \
 
 ### Optional Parameters
 
-- `port`: Port number for SSE transport mode (default: 8202)
+- `port`: Port number for SSE transport mode (default: 8201)
 - `stdio`: Flag to enable Standard I/O transport mode
 
 ## Development
