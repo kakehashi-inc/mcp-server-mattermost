@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "mattermost": {
-      "url": "http://localhost:8201"
+      "url": "http://localhost:8201/sse"
     },
     "mattermost-stdio": {
       "command": "bash",
