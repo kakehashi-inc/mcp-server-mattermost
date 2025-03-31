@@ -15,8 +15,18 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
-# Start Inspector
-npx -y @modelcontextprotocol/inspector node build/index.js
+# Start Inspector in background
+npx -y @modelcontextprotocol/inspector node build/index.js & INSPECTOR_PID=$!
 
-# Start the server
-dotenvx run -q -- npx tsx src/main.ts
+# Start the server in background
+dotenvx run -q -- npx tsx src/main.ts & SERVER_PID=$!
+
+# Trap SIGTERM and SIGINT to cleanup child processes
+cleanup() {
+  kill $INSPECTOR_PID $SERVER_PID 2>/dev/null
+  exit 0
+}
+trap cleanup SIGTERM SIGINT
+
+# Wait for child processes
+wait $INSPECTOR_PID $SERVER_PID
