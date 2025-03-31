@@ -23,7 +23,10 @@ dotenvx run -q -- npx tsx src/main.ts & SERVER_PID=$!
 
 # Trap SIGTERM and SIGINT to cleanup child processes
 cleanup() {
+  echo "Shutting down subprocesses..."
   kill $INSPECTOR_PID $SERVER_PID 2>/dev/null
+  wait $INSPECTOR_PID $SERVER_PID 2>/dev/null
+  echo "Shutdown complete"
   exit 0
 }
 trap cleanup SIGTERM SIGINT
