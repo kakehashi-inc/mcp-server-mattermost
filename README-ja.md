@@ -85,6 +85,7 @@ npm start -- --stdio
 ## 参考サイト
 
 - [Model Context Protocol TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
+- [MCP inspector](https://github.com/modelcontextprotocol/inspector)
 
 ## ライセンス
 

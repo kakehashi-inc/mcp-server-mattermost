@@ -15,5 +15,8 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
+# Start Inspector
+npx -y @modelcontextprotocol/inspector node build/index.js
+
 # Start the server
 dotenvx run -q -- npx tsx src/main.ts
