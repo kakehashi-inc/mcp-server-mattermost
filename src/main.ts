@@ -1,39 +1,50 @@
 #!/usr/bin/env node
 
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
-import express, { Request, Response } from 'express';
+import { FastMCP } from 'fastmcp';
 import { config } from './config/config.js';
-import { mattermostPrompt } from './mattermost/mcp.prompt.js';
-import { mattermostTool } from './mattermost/mcp.tool.js';
+import { mattermostSearch } from './mcp-tools/mattermost_search.js';
 
-const mcp = new McpServer({
+// FastMCPインスタンスの作成
+const mcp = new FastMCP({
   name: process.env.npm_package_name ?? 'mcp-server-mattermost',
-  version: process.env.npm_package_version ?? '0.0.1',
+  version: (process.env.npm_package_version ?? '0.0.1') as `${number}.${number}.${number}`,
 });
 
-// MCPツールとプロンプトの登録
-mcp.tool(
-  mattermostTool.name,
-  mattermostTool.description,
-  mattermostTool.parameters,
-  mattermostTool.execute
-);
+// MCPツールの登録
+mcp.addTool({
+  name: mattermostSearch.name,
+  description: mattermostSearch.description,
+  parameters: mattermostSearch.parameters,
+  execute: mattermostSearch.execute,
+});
 
-mcp.prompt(
-  mattermostPrompt.name,
-  mattermostPrompt.description,
-  mattermostPrompt.parameters,
-  mattermostPrompt.execute
-);
-
-// クリーンアップ処理を行う関数
-async function cleanup(): Promise<void> {
-  console.log('Shutting down...');
+// サーバーの起動
+async function startServer() {
   try {
-    // MCPサーバーのクリーンアップ
-    await mcp.close();
+    if (config.transport === 'stdio') {
+      console.error('Starting MCP server in stdio mode...');
+      await mcp.start({
+        transportType: 'stdio',
+      });
+    } else {
+      await mcp.start({
+        transportType: 'httpStream',
+        httpStream: {
+          port: config.port,
+        },
+      });
+    }
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// クリーンアップ処理
+async function cleanup(): Promise<void> {
+  console.error('Shutting down...');
+  try {
+    await mcp.stop();
   } catch (error: unknown) {
     console.error('Error during cleanup:', error);
   }
@@ -59,39 +70,5 @@ process.on('unhandledRejection', (reason, promise) => {
   void cleanup();
 });
 
-// タイプに合わせて処理を実行
-if (config.stdio) {
-  // stdioモードの場合
-  const transport = new StdioServerTransport();
-  await mcp.connect(transport);
-} else {
-  // HTTPモードの場合
-  const app = express();
-
-  // to support multiple simultaneous connections we have a lookup object from
-  // sessionId to transport
-  const transports = new Map<string, SSEServerTransport>();
-
-  app.get('/sse', async (_: Request, res: Response) => {
-    const transport = new SSEServerTransport('/messages', res);
-    transports.set(transport.sessionId, transport);
-    res.on('close', () => {
-      transports.delete(transport.sessionId);
-    });
-    await mcp.connect(transport);
-  });
-
-  app.post('/messages', async (req: Request, res: Response) => {
-    const sessionId = req.query.sessionId as string;
-    const transport = transports.get(sessionId);
-    if (transport) {
-      await transport.handlePostMessage(req, res);
-    } else {
-      res.status(400).send('No transport found for sessionId');
-    }
-  });
-
-  console.log(`MCP Server is running on port ${config.port.toString()}`);
-
-  app.listen(config.port);
-}
+// サーバー起動
+void startServer();

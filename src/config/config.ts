@@ -11,7 +11,7 @@ export const argsSchema = z.object({
     .transform(val => (val ? val.split(',').filter(Boolean) : undefined))
     .optional(),
   limit: z.coerce.number().optional().default(100),
-  stdio: z.boolean().optional().default(false),
+  transport: z.enum(['stdio', 'http-stream']).optional().default('stdio'),
   port: z.coerce.number().optional().default(8201),
 });
 

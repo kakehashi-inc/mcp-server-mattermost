@@ -6,11 +6,12 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 
 - Connects to Mattermost API endpoints
 - Supports multiple transport modes:
-  - SSE (Server-Sent Events)
   - Standard I/O
+  - Streamable HTTP
 - Real-time message processing
 - Team and channel-specific monitoring
 - Secure token-based authentication
+- Built with FastMCP for simplified MCP server implementation
 
 ## Requirements
 
@@ -46,7 +47,8 @@ dotenvx encrypt
 
 Required environment variables:
 
-- `MCP_PORT`: Port number for SSE transport mode (default: 8201)
+- `MCP_PORT`: Port number for HTTP transport mode (default: 8201)
+- `MCP_TRANSPORT`: Transport mode to use: `stdio` or `http-stream` (default: stdio)
 - `MATTERMOST_ENDPOINT`: Your Mattermost server URL
 - `MATTERMOST_TOKEN`: Your Mattermost authentication token
 - `MATTERMOST_TEAM_ID`: The ID of the team to monitor
@@ -60,18 +62,18 @@ npm run build
 
 ## Usage
 
-The server can be run in two transport modes:
-
-### SSE Transport Mode
-
-```bash
-npm start
-```
+The server supports two transport modes: stdio (default) and http-stream.
 
 ### Standard I/O Transport Mode
 
 ```bash
-npm start -- --stdio
+npm start -- --transport stdio
+```
+
+### HTTP Transport Mode
+
+```bash
+npm start -- --transport http-stream
 ```
 
 ## Development

@@ -1,13 +1,13 @@
-import { z, ZodTypeAny } from 'zod';
-import { MattermostClient } from './client.js';
+import { z } from 'zod';
+import { MattermostClient } from '../mattermost/client.js';
 import { config } from '../config/config.js';
-import type { Message } from './client.js';
+import type { Message } from '../mattermost/client.js';
 
-const name = 'mattermost';
+const name = 'mattermost_search';
 
 const description = 'Fetch messages from Mattermost channels with optional search functionality';
 
-const parameters = {
+const parametersSchema = {
   channels: z
     .array(z.string())
     .optional()
@@ -29,9 +29,10 @@ const parameters = {
     ),
 };
 
-type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
+const parameters = z.object(parametersSchema);
 
-const execute = async ({ channels, limit, query }: Args) => {
+const execute = async (args: unknown) => {
+  const { channels, limit, query } = parameters.parse(args);
   const client = new MattermostClient(config.endpoint, config.token);
   const targetChannels = channels ?? config.channels ?? [];
   const messageLimit = limit ?? config.limit;
@@ -59,7 +60,7 @@ const execute = async ({ channels, limit, query }: Args) => {
   };
 };
 
-export const mattermostTool = {
+export const mattermostSearch = {
   name,
   description,
   parameters,

@@ -6,11 +6,12 @@
 
 - MattermostのAPIエンドポイントへの接続
 - 複数のトランスポートモードをサポート：
-  - SSE（Server-Sent Events）
-  - 標準入出力
+  - Standard I/O
+  - Streamable HTTP
 - リアルタイムメッセージ処理
 - チームとチャンネル単位のモニタリング
 - セキュアなトークンベースの認証
+- FastMCPを使用したシンプルなMCPサーバー実装
 
 ## 必要条件
 
@@ -46,7 +47,8 @@ dotenvx encrypt
 
 必要な環境変数：
 
-- `MCP_PORT`: SSEトランスポートモードのポート番号（デフォルト: 8201）
+- `MCP_PORT`: HTTPトランスポートモードのポート番号（デフォルト: 8201）
+- `MCP_TRANSPORT`: 使用するトランスポートモード: `stdio`、または`http-stream`（デフォルト: stdio）
 - `MATTERMOST_ENDPOINT`: MattermostサーバーのURL
 - `MATTERMOST_TOKEN`: Mattermostの認証トークン
 - `MATTERMOST_TEAM_ID`: モニタリング対象のチームID
@@ -60,18 +62,18 @@ npm run build
 
 ## 使用方法
 
-サーバーは2つのトランスポートモードで実行できます：
-
-### SSEトランスポートモード
-
-```bash
-npm start
-```
+サーバーは2つのトランスポートモードをサポートしています：stdio（デフォルト）、http-stream。
 
 ### 標準入出力トランスポートモード
 
 ```bash
-npm start -- --stdio
+npm start -- --transport stdio
+```
+
+### HTTPトランスポートモード
+
+```bash
+npm start -- --transport http-stream
 ```
 
 ## 開発

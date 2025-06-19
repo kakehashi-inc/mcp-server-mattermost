@@ -8,8 +8,8 @@
     "mcp-server-mattermost": "dist/main.js"
   },
   "scripts": {
-    "start": "dotenvx run -q -- node dist/main.js",
-    "dev": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts",
+    "start": "dotenvx run -q -- node dist/main.js --transport http-stream",
+    "dev": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts --transport http-stream",
     "build": "tsc",
     "postbuild": "node -e \"try { require('fs').chmodSync('dist/main.js', 0o755) } catch (e) { /* no-op */ }\"",
     "lint": "eslint src/**",
