@@ -60,20 +60,28 @@ npm run build
 
 ## 使用方法
 
-サーバーは2つのトランスポートモードをサポートしています：stdio（デフォルト）、http-stream。
+サーバーは3つのトランスポートモードをサポートしています：stdio（デフォルト）、sse、http-stream。
 
 ### 標準入出力トランスポートモード
 
 ```bash
-npm start:stdio
+npm run start:stdio
 # or
 npx dotenvx run -q -- "node dist/main.js --transport stdio"
+```
+
+### SSEトランスポートモード
+
+```bash
+npm run start:sse
+# or
+npx dotenvx run -q -- "node dist/main.js --transport sse"
 ```
 
 ### HTTPトランスポートモード
 
 ```bash
-npm start:http
+npm run start:http
 # or
 npx dotenvx run -q -- "node dist/main.js --transport http-stream"
 ```

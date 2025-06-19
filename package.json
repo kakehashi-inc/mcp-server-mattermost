@@ -10,6 +10,8 @@
   "scripts": {
     "start:stdio": "dotenvx run -q -- node dist/main.js --transport stdio",
     "dev:stdio": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts --transport stdio",
+    "start:sse": "dotenvx run -q -- node dist/main.js --transport sse",
+    "dev:sse": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts --transport sse",
     "start:http": "dotenvx run -q -- node dist/main.js --transport http-stream",
     "dev:http": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts --transport http-stream",
     "build": "tsc",

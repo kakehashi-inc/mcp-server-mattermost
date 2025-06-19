@@ -60,20 +60,28 @@ npm run build
 
 ## Usage
 
-The server supports two transport modes: stdio (default) and http-stream.
+The server supports three transport modes: stdio (default), sse, and http-stream.
 
 ### Standard I/O Transport Mode
 
 ```bash
-npm start:stdio
+npm run start:stdio
 # or
 npx dotenvx run -q -- "node dist/main.js --transport stdio"
+```
+
+### SSE Transport Mode
+
+```bash
+npm run start:sse
+# or
+npx dotenvx run -q -- "node dist/main.js --transport sse"
 ```
 
 ### HTTP Transport Mode
 
 ```bash
-npm start:http
+npm run start:http
 # or
 npx dotenvx run -q -- "node dist/main.js --transport http-stream"
 ```

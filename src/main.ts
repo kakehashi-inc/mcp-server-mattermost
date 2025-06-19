@@ -22,9 +22,16 @@ mcp.addTool({
 async function startServer() {
   try {
     if (config.transport === 'stdio') {
-      console.error('Starting MCP server in stdio mode...');
       await mcp.start({
         transportType: 'stdio',
+      });
+    } else if (config.transport === 'sse') {
+      await mcp.start({
+        transportType: 'httpStream',
+        httpStream: {
+          endpoint: `/sse`,
+          port: config.port,
+        },
       });
     } else {
       await mcp.start({
@@ -42,7 +49,7 @@ async function startServer() {
 
 // クリーンアップ処理
 async function cleanup(): Promise<void> {
-  console.error('Shutting down...');
+  console.info('Shutting down...');
   try {
     await mcp.stop();
   } catch (error: unknown) {
