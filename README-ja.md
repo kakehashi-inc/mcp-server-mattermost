@@ -66,12 +66,16 @@ npm run build
 
 ```bash
 npm start:stdio
+# or
+npx dotenvx run -q -- "node dist/main.js --transport stdio"
 ```
 
 ### HTTPトランスポートモード
 
 ```bash
 npm start:http
+# or
+npx dotenvx run -q -- "node dist/main.js --transport http-stream"
 ```
 
 ## 開発

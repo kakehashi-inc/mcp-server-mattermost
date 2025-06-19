@@ -66,12 +66,16 @@ The server supports two transport modes: stdio (default) and http-stream.
 
 ```bash
 npm start:stdio
+# or
+npx dotenvx run -q -- "node dist/main.js --transport stdio"
 ```
 
 ### HTTP Transport Mode
 
 ```bash
 npm start:http
+# or
+npx dotenvx run -q -- "node dist/main.js --transport http-stream"
 ```
 
 ## Development
