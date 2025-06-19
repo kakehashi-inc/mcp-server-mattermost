@@ -3,7 +3,9 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import express, { Request, Response } from 'express';
+import { randomUUID } from 'crypto';
 import { config } from './config/config.js';
 import { mattermostSearch } from './mcp-tools/mattermost_search.js';
 
@@ -54,7 +56,112 @@ process.on('unhandledRejection', (reason, promise) => {
 // タイプに合わせて処理を実行
 if (config.transport === 'http-stream') {
   // Streamable httpモードの場合
+  const app = express();
+  app.use(express.json());
 
+  // セッション管理用のトランスポートマップ
+  const transports = new Map<string, StreamableHTTPServerTransport>();
+
+  // POST /mcpエンドポイント - クライアントからサーバーへの通信
+  app.post('/mcp', async (req: Request, res: Response) => {
+    try {
+      // セッションIDをヘッダーから取得
+      const sessionId = req.headers['mcp-session-id'] as string | undefined;
+      let transport: StreamableHTTPServerTransport;
+
+      if (sessionId && transports.has(sessionId)) {
+        // 既存のセッションを使用
+        const existingTransport = transports.get(sessionId);
+        if (!existingTransport) {
+          throw new Error('Transport not found for session ID');
+        }
+        transport = existingTransport;
+      } else {
+        // 新しいセッションを作成
+        transport = new StreamableHTTPServerTransport({
+          sessionIdGenerator: () => randomUUID(),
+          onsessioninitialized: (newSessionId) => {
+            transports.set(newSessionId, transport);
+          }
+        });
+
+        // トランスポートが閉じられた時のクリーンアップ
+        transport.onclose = () => {
+          if (transport.sessionId) {
+            transports.delete(transport.sessionId);
+          }
+        };
+
+        // MCPサーバーに接続
+        await mcp.connect(transport);
+      }
+
+      // リクエストを処理
+      await transport.handleRequest(req, res, req.body);
+    } catch (error: unknown) {
+      console.error('Error handling MCP request:', error);
+      if (!res.headersSent) {
+        res.status(500).json({
+          jsonrpc: '2.0',
+          error: {
+            code: -32603,
+            message: 'Internal server error',
+          },
+          id: null,
+        });
+      }
+    }
+  });
+
+  // GET /mcpエンドポイント - サーバーからクライアントへの通知（SSE）
+  app.get('/mcp', async (req: Request, res: Response) => {
+    try {
+      const sessionId = req.headers['mcp-session-id'] as string | undefined;
+      if (!sessionId || !transports.has(sessionId)) {
+        res.status(400).send('Invalid or missing session ID');
+        return;
+      }
+
+      const transport = transports.get(sessionId);
+      if (!transport) {
+        res.status(400).send('Transport not found for session ID');
+        return;
+      }
+      await transport.handleRequest(req, res);
+    } catch (error: unknown) {
+      console.error('Error handling GET request:', error);
+      if (!res.headersSent) {
+        res.status(500).send('Internal server error');
+      }
+    }
+  });
+
+  // DELETE /mcpエンドポイント - セッション終了
+  app.delete('/mcp', async (req: Request, res: Response) => {
+    try {
+      const sessionId = req.headers['mcp-session-id'] as string | undefined;
+      if (!sessionId || !transports.has(sessionId)) {
+        res.status(400).send('Invalid or missing session ID');
+        return;
+      }
+
+      const transport = transports.get(sessionId);
+      if (!transport) {
+        res.status(400).send('Transport not found for session ID');
+        return;
+      }
+      await transport.handleRequest(req, res);
+    } catch (error: unknown) {
+      console.error('Error handling DELETE request:', error);
+      if (!res.headersSent) {
+        res.status(500).send('Internal server error');
+      }
+    }
+  });
+
+  console.log(`MCP Streamable HTTP Server is running on port ${config.port.toString()}`);
+
+  app.listen(config.port);
 } else if (config.transport === 'sse') {
   // SSEモードの場合
   const app = express();
