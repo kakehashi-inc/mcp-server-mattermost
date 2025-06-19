@@ -1,11 +1,11 @@
 {
-  "name": "mattermost-mcp-server",
+  "name": "mcp-server-mattermost",
   "version": "0.0.1",
   "description": "A Model Context Protocol server for Mattermost",
   "type": "module",
   "main": "dist/main.js",
   "bin": {
-    "mattermost-mcp-server": "dist/main.js"
+    "mcp-server-mattermost": "dist/main.js"
   },
   "scripts": {
     "start": "dotenvx run -q -- node dist/main.js",
@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kakehashi-inc/mattermost-mcp-server.git"
+    "url": "git+https://github.com/kakehashi-inc/mcp-server-mattermost.git"
   },
   "keywords": [
     "mcp",
@@ -42,9 +42,9 @@
     "README-ja.md"
   ],
   "bugs": {
-    "url": "https://github.com/kakehashi-inc/mattermost-mcp-server/issues"
+    "url": "https://github.com/kakehashi-inc/mcp-server-mattermost/issues"
   },
-  "homepage": "https://github.com/kakehashi-inc/mattermost-mcp-server#readme",
+  "homepage": "https://github.com/kakehashi-inc/mcp-server-mattermost#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.8.0",
     "axios": "^1.8.4",

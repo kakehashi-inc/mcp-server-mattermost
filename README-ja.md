@@ -1,4 +1,4 @@
-# mattermost-mcp-server
+# mcp-server-mattermost
 
 このプロジェクトは、Mattermostとの統合のためのModel Context Protocol (MCP)サーバーを実装します。MattermostのAPIエンドポイントに接続し、各種情報を取得・処理して、標準MCPトランスポートを通じて提供します。
 
@@ -24,8 +24,8 @@
 1. リポジトリのクローン：
 
 ```bash
-git clone https://github.com/kakehashi-inc/mattermost-mcp-server.git
-cd mattermost-mcp-server
+git clone https://github.com/kakehashi-inc/mcp-server-mattermost.git
+cd mcp-server-mattermost
 ```
 
 2. 依存関係のインストール：

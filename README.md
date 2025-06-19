@@ -1,4 +1,4 @@
-# mattermost-mcp-server
+# mcp-server-mattermost
 
 This project implements a Model Context Protocol (MCP) server for Mattermost integration. It connects to Mattermost API endpoints to retrieve and process various information, making it available through standard MCP transports.
 
@@ -24,8 +24,8 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/kakehashi-inc/mattermost-mcp-server.git
-cd mattermost-mcp-server
+git clone https://github.com/kakehashi-inc/mcp-server-mattermost.git
+cd mcp-server-mattermost
 ```
 
 2. Install dependencies:

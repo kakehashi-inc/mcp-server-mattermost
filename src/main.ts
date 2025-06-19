@@ -9,7 +9,7 @@ import { mattermostPrompt } from './mattermost/mcp.prompt.js';
 import { mattermostTool } from './mattermost/mcp.tool.js';
 
 const mcp = new McpServer({
-  name: process.env.npm_package_name ?? 'mattermost-mcp-server',
+  name: process.env.npm_package_name ?? 'mcp-server-mattermost',
   version: process.env.npm_package_version ?? '0.0.1',
 });
 
