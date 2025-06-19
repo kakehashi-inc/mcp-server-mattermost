@@ -189,7 +189,7 @@ if (config.transport === 'http-stream') {
     }
   });
 
-  console.log(`MCP Server is running on port ${config.port.toString()}`);
+  console.log(`MCP SSE Server is running on port ${config.port.toString()}`);
 
   app.listen(config.port);
 } else {
