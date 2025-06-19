@@ -11,7 +11,7 @@
     "start": "dotenvx run -q -- node dist/main.js",
     "dev": "dotenvx run -q -- tsx watch --clear-screen=false src/main.ts",
     "build": "tsc",
-    "postbuild": "chmod +x dist/main.js",
+    "postbuild": "node -e \"try { require('fs').chmodSync('dist/main.js', 0o755) } catch (e) { /* no-op */ }\"",
     "lint": "eslint src/**",
     "lint:fix": "eslint src/** --fix",
     "format": "prettier --write \"**/*.{ts,json,md,yml,js}\"",
@@ -52,6 +52,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^1.44.2",
     "@eslint/js": "^9.23.0",
     "@types/express": "^5.0.1",
     "@types/node": "^22.13.14",
