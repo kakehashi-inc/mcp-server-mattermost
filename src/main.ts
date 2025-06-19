@@ -80,9 +80,9 @@ if (config.transport === 'http-stream') {
         // 新しいセッションを作成
         transport = new StreamableHTTPServerTransport({
           sessionIdGenerator: () => randomUUID(),
-          onsessioninitialized: (newSessionId) => {
+          onsessioninitialized: newSessionId => {
             transports.set(newSessionId, transport);
-          }
+          },
         });
 
         // トランスポートが閉じられた時のクリーンアップ

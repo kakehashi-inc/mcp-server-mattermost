@@ -26,7 +26,7 @@ export class MattermostClient {
 
   constructor(
     private readonly endpoint: string,
-    private readonly token: string,
+    private readonly token: string
   ) {
     this.client = axios.create({
       baseURL: endpoint,
@@ -37,12 +37,15 @@ export class MattermostClient {
   }
 
   async getMessages(channelId: string, limit = 100): Promise<Message[]> {
-    const response = await this.client.get<{ posts: Record<string, Post> }>(`/api/v4/channels/${channelId}/posts`, {
-      params: {
-        page: 0,
-        per_page: limit,
-      },
-    });
+    const response = await this.client.get<{ posts: Record<string, Post> }>(
+      `/api/v4/channels/${channelId}/posts`,
+      {
+        params: {
+          page: 0,
+          per_page: limit,
+        },
+      }
+    );
 
     return Object.values(response.data.posts).map(post => ({
       id: post.id,
