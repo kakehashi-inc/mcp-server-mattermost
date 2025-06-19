@@ -47,8 +47,6 @@ dotenvx encrypt
 
 必要な環境変数：
 
-- `MCP_PORT`: HTTPトランスポートモードのポート番号（デフォルト: 8201）
-- `MCP_TRANSPORT`: 使用するトランスポートモード: `stdio`、または`http-stream`（デフォルト: stdio）
 - `MATTERMOST_ENDPOINT`: MattermostサーバーのURL
 - `MATTERMOST_TOKEN`: Mattermostの認証トークン
 - `MATTERMOST_TEAM_ID`: モニタリング対象のチームID
@@ -67,13 +65,13 @@ npm run build
 ### 標準入出力トランスポートモード
 
 ```bash
-npm start -- --transport stdio
+npm start:stdio
 ```
 
 ### HTTPトランスポートモード
 
 ```bash
-npm start -- --transport http-stream
+npm start:http
 ```
 
 ## 開発

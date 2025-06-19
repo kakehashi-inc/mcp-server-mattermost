@@ -23,13 +23,5 @@ export function parseEnvs(): ParsedEnvs {
     parsedEnvs.limit = process.env.MATTERMOST_LIMIT;
   }
 
-  if (process.env.MCP_PORT) {
-    parsedEnvs.port = process.env.MCP_PORT;
-  }
-
-  if (process.env.MCP_TRANSPORT) {
-    parsedEnvs.transport = process.env.MCP_TRANSPORT;
-  }
-
   return parsedEnvs;
 }

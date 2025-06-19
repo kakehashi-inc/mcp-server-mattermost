@@ -47,8 +47,6 @@ dotenvx encrypt
 
 Required environment variables:
 
-- `MCP_PORT`: Port number for HTTP transport mode (default: 8201)
-- `MCP_TRANSPORT`: Transport mode to use: `stdio` or `http-stream` (default: stdio)
 - `MATTERMOST_ENDPOINT`: Your Mattermost server URL
 - `MATTERMOST_TOKEN`: Your Mattermost authentication token
 - `MATTERMOST_TEAM_ID`: The ID of the team to monitor
@@ -67,13 +65,13 @@ The server supports two transport modes: stdio (default) and http-stream.
 ### Standard I/O Transport Mode
 
 ```bash
-npm start -- --transport stdio
+npm start:stdio
 ```
 
 ### HTTP Transport Mode
 
 ```bash
-npm start -- --transport http-stream
+npm start:http
 ```
 
 ## Development
