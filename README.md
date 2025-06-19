@@ -4,14 +4,13 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 
 ## Features
 
-- Connects to Mattermost API endpoints
+- Secure, token-based connection to Mattermost API endpoints
 - Supports multiple transport modes:
-  - Standard I/O
-  - Streamable HTTP
-- Real-time message processing
-- Team and channel-specific monitoring
-- Secure token-based authentication
-- Built with FastMCP for simplified MCP server implementation
+  - `stdio`
+  - `http-stream`
+  - `sse`
+- Search for messages across multiple Mattermost channels
+- Customizable default channels and message fetch limits
 
 ## Requirements
 
