@@ -41,9 +41,13 @@ const execute = async ({ channels, limit, query }: Args) => {
   for (const channelId of targetChannels) {
     let channelMessages: Message[];
     if (query) {
+      console.log(`Searching messages from ${channelId} with query: ${query} (limit:${messageLimit.toString()})`);
       channelMessages = await client.searchMessages(query, [channelId], messageLimit);
+      console.log(`Found ${channelMessages.length.toString()} messages`);
     } else {
+      console.log(`Fetching recent messages from ${channelId} (limit:${messageLimit.toString()})`);
       channelMessages = await client.getMessages(channelId, messageLimit);
+      console.log(`Found ${channelMessages.length.toString()} messages`);
     }
 
     messages.push({
