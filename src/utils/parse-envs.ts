@@ -12,7 +12,7 @@ export function parseEnvs(): ParsedEnvs {
   }
 
   if (process.env.MATTERMOST_TEAM_ID) {
-    parsedEnvs['team-id'] = process.env.MATTERMOST_TEAM_ID;
+    parsedEnvs.teamId = process.env.MATTERMOST_TEAM_ID;
   }
 
   if (process.env.MATTERMOST_CHANNELS) {
