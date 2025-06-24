@@ -43,19 +43,21 @@ const execute = async ({ query, channels, before, after, on, limit }: Args) => {
   }
 
   for (const channelName of targetChannels) {
-    let paramString = `query: ${query}`;
-    if (before) {
-      paramString += `, before: ${before}`;
+    if (config.transport !== 'stdio') {
+      let paramString = `query: ${query}`;
+      if (before) {
+        paramString += `, before: ${before}`;
+      }
+      if (after) {
+        paramString += `, after: ${after}`;
+      }
+      if (on) {
+        paramString += `, on: ${on}`;
+      }
+      console.log(
+        `Searching messages from ${channelName} with ${paramString} (limit:${messageLimit.toString()})`
+      );
     }
-    if (after) {
-      paramString += `, after: ${after}`;
-    }
-    if (on) {
-      paramString += `, on: ${on}`;
-    }
-    console.log(
-      `Searching messages from ${channelName} with ${paramString} (limit:${messageLimit.toString()})`
-    );
 
     const channelMessages: Message[] = await client.searchMessagesByName(
       query,
@@ -67,7 +69,9 @@ const execute = async ({ query, channels, before, after, on, limit }: Args) => {
       messageLimit
     );
 
-    console.log(`Found ${channelMessages.length.toString()} messages`);
+    if (config.transport !== 'stdio') {
+      console.log(`Found ${channelMessages.length.toString()} messages`);
+    }
 
     messages.push({
       type: 'text' as const,

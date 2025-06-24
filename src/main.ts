@@ -210,7 +210,5 @@ if (config.transport === 'http-stream') {
   // stdioモードの場合
   const transport = new StdioServerTransport();
 
-  console.log('MCP Server is running on stdio');
-
   await mcp.connect(transport);
 }

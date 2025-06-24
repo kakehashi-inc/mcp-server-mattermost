@@ -118,13 +118,15 @@ node dist/main.js --transport http-stream
   "mcpServers": {
     "mattermost": {
       "command": "npx",
-      "args": ["mcp-server-mattermost", "--transport", "stdio"],
-      "env": {
-        "MATTERMOST_ENDPOINT": "https://your-mattermost-server.com",
-        "MATTERMOST_TOKEN": "your-token-here",
-        "MATTERMOST_TEAM": "your-team-name",
-        "MATTERMOST_CHANNELS": "general,random,dev"
-      }
+      "args": [
+        "-y"
+        "mcp-server-mattermost@latest",
+        "--transport", "stdio"
+        "--endpoint", "https://your-mattermost-server/api/v4",
+        "--token", "your_personal_access_token",
+        "--team", "your_team_name",
+        "--channels", "town-square,general,your_channel_name"
+      ]
     }
   }
 }

@@ -34,11 +34,17 @@ const execute = async ({ channels, limit }: Args) => {
   const messages: { type: 'text'; text: string }[] = [];
 
   for (const channelName of targetChannels) {
-    console.log(`Fetching recent messages from ${channelName} (limit:${messageLimit.toString()})`);
+    if (config.transport !== 'stdio') {
+      console.log(
+        `Fetching recent messages from ${channelName} (limit:${messageLimit.toString()})`
+      );
+    }
 
     const channelMessages: Message[] = await client.getMessagesByName(channelName, messageLimit);
 
-    console.log(`Found ${channelMessages.length.toString()} messages`);
+    if (config.transport !== 'stdio') {
+      console.log(`Found ${channelMessages.length.toString()} messages`);
+    }
 
     messages.push({
       type: 'text' as const,

@@ -60,7 +60,7 @@ npm install -g @dotenvx/dotenvx
 cp .env.example .env
 # Edit .env file with your values
 
-# Encrypt your .env file (optional but recommended for production)
+# Encrypt your .env file (recommended for production)
 dotenvx encrypt
 ```
 
@@ -118,13 +118,15 @@ To use this MCP server with Claude Desktop, add the following configuration to y
   "mcpServers": {
     "mattermost": {
       "command": "npx",
-      "args": ["mcp-server-mattermost", "--transport", "stdio"],
-      "env": {
-        "MATTERMOST_ENDPOINT": "https://your-mattermost-server.com",
-        "MATTERMOST_TOKEN": "your-token-here",
-        "MATTERMOST_TEAM": "your-team-name",
-        "MATTERMOST_CHANNELS": "general,random,dev"
-      }
+      "args": [
+        "-y",
+        "mcp-server-mattermost@latest",
+        "--transport", "stdio",
+        "--endpoint", "https://your-mattermost-server/api/v4",
+        "--token", "your_personal_access_token",
+        "--team", "your_team_name",
+        "--channels", "town-square,general,your_channel_name"
+      ]
     }
   }
 }
