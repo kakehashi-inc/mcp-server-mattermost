@@ -1,10 +1,10 @@
 import { z, ZodTypeAny } from 'zod';
-import { MattermostClient } from '../mattermost/client.js';
+import { MattermostClient, Channel } from '../mattermost/client.js';
 import { config } from '../config/config.js';
 
 const name = 'mattermost_channels';
 
-const description = 'Fetch channels from Mattermost';
+const description = 'Fetch channels from Mattermost. return json of channels information.';
 
 const parameters = {
   limit: z
@@ -16,18 +16,24 @@ const parameters = {
 
 type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const execute = async ({ limit }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
 
-  const result: { type: 'text'; text: string }[] = [];
+  const channels = await client.getChannels(config.channels);
 
-  const channels = await client.getChannels();
-
+  const resultChannels: Channel[] = [];
   for (const channel of channels) {
-    result.push({
-      type: 'text',
-      text: JSON.stringify({
+    if (limit && resultChannels.length >= limit) {
+      break;
+    }
+    resultChannels.push(channel);
+  }
+
+  const result: { type: 'text'; text: string }[] = [];
+  result.push({
+    type: 'text' as const,
+    text: JSON.stringify(
+      Object.values(resultChannels).map(channel => ({
         id: channel.id,
         create_at: channel.create_at,
         update_at: channel.update_at,
@@ -43,9 +49,9 @@ const execute = async ({ limit }: Args) => {
         team_display_name: channel.team_display_name,
         team_name: channel.team_name,
         team_update_at: channel.team_update_at,
-      }),
-    });
-  }
+      }))
+    ),
+  });
 
   return {
     content: result,

@@ -5,7 +5,8 @@ import type { Message } from '../mattermost/client.js';
 
 const name = 'mattermost_fetch';
 
-const description = 'Fetch messages from Mattermost channels';
+const description =
+  'Fetch messages from Mattermost channels. return json of messages grouped by channel.';
 
 const parameters = {
   channels: z
@@ -27,7 +28,7 @@ type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
 const execute = async ({ channels, limit }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
-  const targetChannels = channels ?? config.channels ?? [];
+  const targetChannels = await client.getTargetChannelNames(channels, config.channels);
   const messageLimit = limit ?? config.limit;
 
   const messages: { type: 'text'; text: string }[] = [];
@@ -35,15 +36,16 @@ const execute = async ({ channels, limit }: Args) => {
   for (const channelName of targetChannels) {
     console.log(`Fetching recent messages from ${channelName} (limit:${messageLimit.toString()})`);
 
-    const channelMessages: Message[] = await client.getMessages(channelName, messageLimit);
+    const channelMessages: Message[] = await client.getMessagesByName(channelName, messageLimit);
 
     console.log(`Found ${channelMessages.length.toString()} messages`);
 
     messages.push({
       type: 'text' as const,
-      text: `Channel: ${channelName}\n${channelMessages
-        .map(m => `[${new Date(m.create_at).toISOString()}] ${m.username}: ${m.message}`)
-        .join('\n')}`,
+      text: JSON.stringify({
+        channel: channelName,
+        messages: channelMessages,
+      }),
     });
   }
 

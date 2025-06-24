@@ -5,7 +5,8 @@ import type { Message } from '../mattermost/client.js';
 
 const name = 'mattermost_search';
 
-const description = 'Fetch messages from Mattermost channels with optional search functionality';
+const description =
+  'Search messages from Mattermost channels. return json of messages grouped by channel.';
 
 const parameters = {
   query: z.string().describe('Search query to filter messages.'),
@@ -28,7 +29,7 @@ type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
 const execute = async ({ channels, limit, query }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
-  const targetChannels = channels ?? config.channels ?? [];
+  const targetChannels = await client.getTargetChannelNames(channels, config.channels);
   const messageLimit = limit ?? config.limit;
 
   const messages: { type: 'text'; text: string }[] = [];
@@ -43,7 +44,7 @@ const execute = async ({ channels, limit, query }: Args) => {
       `Searching messages from ${channelName} with query: ${query} (limit:${messageLimit.toString()})`
     );
 
-    const channelMessages: Message[] = await client.searchMessages(
+    const channelMessages: Message[] = await client.searchMessagesByName(
       query,
       [channelName],
       messageLimit
@@ -53,9 +54,10 @@ const execute = async ({ channels, limit, query }: Args) => {
 
     messages.push({
       type: 'text' as const,
-      text: `Channel: ${channelName}\n${channelMessages
-        .map(m => `[${new Date(m.create_at).toISOString()}] ${m.username}: ${m.message}`)
-        .join('\n')}`,
+      text: JSON.stringify({
+        channel: channelName,
+        messages: channelMessages,
+      }),
     });
   }
 
