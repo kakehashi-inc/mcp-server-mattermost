@@ -48,7 +48,7 @@ dotenvx encrypt
 
 - `MATTERMOST_ENDPOINT`: MattermostサーバーのURL
 - `MATTERMOST_TOKEN`: Mattermostの認証トークン
-- `MATTERMOST_TEAM_ID`: モニタリング対象のチームID
+- `MATTERMOST_TEAM`: モニタリング対象のチーム名
 - `MATTERMOST_CHANNELS`: モニタリング対象のチャンネル名（カンマ区切り）
 
 4. サーバーのビルド：

@@ -11,8 +11,8 @@ export function parseEnvs(): ParsedEnvs {
     parsedEnvs.token = process.env.MATTERMOST_TOKEN;
   }
 
-  if (process.env.MATTERMOST_TEAM_ID) {
-    parsedEnvs.teamId = process.env.MATTERMOST_TEAM_ID;
+  if (process.env.MATTERMOST_TEAM) {
+    parsedEnvs.team = process.env.MATTERMOST_TEAM;
   }
 
   if (process.env.MATTERMOST_CHANNELS) {

@@ -37,7 +37,6 @@ const execute = async ({ limit }: Args) => {
         id: channel.id,
         create_at: channel.create_at,
         update_at: channel.update_at,
-        delete_at: channel.delete_at,
         team_id: channel.team_id,
         type: channel.type,
         display_name: channel.display_name,

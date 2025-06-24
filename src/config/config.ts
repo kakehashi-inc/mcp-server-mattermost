@@ -5,7 +5,7 @@ import { parseArgs } from '../utils/parse-args.js';
 export const argsSchema = z.object({
   endpoint: z.string(),
   token: z.string(),
-  teamId: z.string(),
+  team: z.string(),
   channels: z
     .string()
     .transform(val => (val ? val.split(',').filter(Boolean) : undefined))

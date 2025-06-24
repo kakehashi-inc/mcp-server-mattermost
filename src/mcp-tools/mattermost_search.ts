@@ -46,7 +46,8 @@ const execute = async ({ channels, limit, query }: Args) => {
 
     const channelMessages: Message[] = await client.searchMessagesByName(
       query,
-      [channelName],
+      config.team,
+      channelName,
       messageLimit
     );
 

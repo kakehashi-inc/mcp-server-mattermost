@@ -48,7 +48,7 @@ Required environment variables:
 
 - `MATTERMOST_ENDPOINT`: Your Mattermost server URL
 - `MATTERMOST_TOKEN`: Your Mattermost authentication token
-- `MATTERMOST_TEAM_ID`: The ID of the team to monitor
+- `MATTERMOST_TEAM`: The name of the team to monitor
 - `MATTERMOST_CHANNELS`: Comma-separated list of channel names to monitor
 
 4. Build the server:

@@ -1,6 +1,23 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 
+export interface Channel {
+  id: string;
+  create_at: number;
+  update_at: number;
+  team_id: string;
+  type: string;
+  display_name: string;
+  name: string;
+  header: string;
+  purpose: string;
+  last_post_at: number;
+  total_msg_count: number;
+  team_display_name: string;
+  team_name: string;
+  team_update_at: number;
+}
+
 export interface Message {
   id: string;
   create_at: number;
@@ -15,7 +32,7 @@ export interface Message {
   last_reply_at: number;
 }
 
-export interface Post {
+interface Post {
   id: string;
   create_at: number;
   update_at: number;
@@ -42,29 +59,26 @@ export interface Post {
   last_reply_at: number;
 }
 
-export interface Channel {
+interface Team {
   id: string;
   create_at: number;
   update_at: number;
   delete_at: number;
-  team_id: string;
-  type: string;
   display_name: string;
   name: string;
-  header: string;
-  purpose: string;
-  last_post_at: number;
-  total_msg_count: number;
-  creator_id: string;
-  scheme_id: string;
-  team_display_name: string;
-  team_name: string;
-  team_update_at: number;
+  description?: string;
+  email?: string;
+  type: string;
+  allowed_domains?: string;
+  invite_id?: string;
+  allow_open_invite?: boolean;
+  policy_id?: string;
 }
 
 export class MattermostClient {
   private readonly client: AxiosInstance;
   private initialized = false;
+  private teams: Team[] | null = null;
   private channels: Channel[] | null = null;
 
   constructor(
@@ -84,8 +98,47 @@ export class MattermostClient {
       return;
     }
 
+    this.teams = await this._getTeams();
     this.channels = await this._getChannels();
     this.initialized = true;
+  }
+
+  private async _getTeams(): Promise<Team[]> {
+    const response = await this.client.get<Team[]>('/teams', {
+      params: {
+        page: 0,
+        per_page: 200,
+      },
+    });
+
+    return Object.values(response.data).map(team => ({
+      id: team.id,
+      create_at: team.create_at,
+      update_at: team.update_at,
+      delete_at: team.delete_at,
+      display_name: team.display_name,
+      name: team.name,
+      description: team.description,
+      email: team.email,
+      type: team.type,
+      allowed_domains: team.allowed_domains,
+      invite_id: team.invite_id,
+      allow_open_invite: team.allow_open_invite,
+      policy_id: team.policy_id,
+    }));
+  }
+
+  async getTeamInfo(teamName: string): Promise<Team | null> {
+    if (!this.initialized) {
+      await this.init();
+    }
+
+    const team = this.teams?.find(t => t.name === teamName || t.display_name === teamName);
+    if (!team) {
+      return null;
+    }
+
+    return team;
   }
 
   private async _getChannels(): Promise<Channel[]> {
@@ -100,7 +153,6 @@ export class MattermostClient {
       id: channel.id,
       create_at: channel.create_at,
       update_at: channel.update_at,
-      delete_at: channel.delete_at,
       team_id: channel.team_id,
       type: channel.type,
       display_name: channel.display_name,
@@ -109,8 +161,6 @@ export class MattermostClient {
       purpose: channel.purpose,
       last_post_at: channel.last_post_at,
       total_msg_count: channel.total_msg_count,
-      creator_id: channel.creator_id,
-      scheme_id: channel.scheme_id,
       team_display_name: channel.team_display_name,
       team_name: channel.team_name,
       team_update_at: channel.team_update_at,
@@ -225,29 +275,8 @@ export class MattermostClient {
 
   async searchMessages(
     query: string,
-    channelIds: string[] | null,
-    limit = 100
-  ): Promise<Message[]> {
-    if (!this.initialized) {
-      await this.init();
-    }
-
-    const channelNames: string[] = [];
-    if (channelIds) {
-      for (const channelId of channelIds) {
-        const channel = await this.getChannelInfoById(channelId);
-        if (channel) {
-          channelNames.push(channel.name);
-        }
-      }
-    }
-
-    return this.searchMessagesByName(query, channelNames, limit);
-  }
-
-  async searchMessagesByName(
-    query: string,
-    channelNames: string[] | null,
+    teamId: string,
+    channelName: string | null,
     limit = 100
   ): Promise<Message[]> {
     if (!this.initialized) {
@@ -255,20 +284,21 @@ export class MattermostClient {
     }
 
     let terms;
-    if (!channelNames || channelNames.length === 0) {
-      terms = query;
+    if (channelName) {
+      terms = `${query} in:${channelName}`;
     } else {
-      terms = `${query} in:${channelNames.join(',')}`;
+      terms = query;
     }
 
-    const response = await this.client.post<{ posts: Record<string, Post> }>('/posts/search', {
-      terms,
-      is_or_search: false,
-      page: 0,
-      per_page: limit,
-    });
-
-    console.debug(response.data.posts);
+    const response = await this.client.post<{ posts: Record<string, Post> }>(
+      `/teams/${teamId}/posts/search`,
+      {
+        terms,
+        is_or_search: false,
+        page: 0,
+        per_page: limit,
+      }
+    );
 
     return Object.values(response.data.posts).map(post => ({
       id: post.id,
@@ -283,5 +313,23 @@ export class MattermostClient {
       reply_count: post.reply_count,
       last_reply_at: post.last_reply_at,
     }));
+  }
+
+  async searchMessagesByName(
+    query: string,
+    teamName: string,
+    channelName: string | null,
+    limit = 100
+  ): Promise<Message[]> {
+    if (!this.initialized) {
+      await this.init();
+    }
+
+    const team = await this.getTeamInfo(teamName);
+    if (!team) {
+      throw new Error(`Team ${teamName} not found`);
+    }
+
+    return this.searchMessages(query, team.id, channelName, limit);
   }
 }
