@@ -16,8 +16,6 @@
 
 - Node.js >= 22
 - npm >= 10
-- dotenvx
-  - [dotenvx](https://dotenvx.com/)
 
 ## セットアップ
 
@@ -36,20 +34,35 @@ npm install
 
 3. 環境変数の設定：
 
-```bash
-# .envファイルの作成
-cp .env.example .env
-
-# .envファイルの暗号化（本番環境では推奨）
-dotenvx encrypt
-```
-
-必要な環境変数：
+### 必須環境変数
 
 - `MATTERMOST_ENDPOINT`: MattermostサーバーのURL
 - `MATTERMOST_TOKEN`: Mattermostの認証トークン
 - `MATTERMOST_TEAM`: モニタリング対象のチーム名
 - `MATTERMOST_CHANNELS`: モニタリング対象のチャンネル名（カンマ区切り）
+
+### 環境変数設定方法
+
+#### 方法1: 直接環境変数を設定
+```bash
+export MATTERMOST_ENDPOINT="https://your-mattermost-server.com"
+export MATTERMOST_TOKEN="your-token-here"
+export MATTERMOST_TEAM="your-team-name"
+export MATTERMOST_CHANNELS="general,random,dev"
+```
+
+#### 方法2: .envファイルを使用（dotenvx利用時）
+```bash
+# dotenvxのインストール（任意）
+npm install -g @dotenvx/dotenvx
+
+# .envファイルの作成
+cp .env.example .env
+# .envファイルに設定値を記入
+
+# .envファイルの暗号化（本番環境では推奨）
+dotenvx encrypt
+```
 
 4. サーバーのビルド：
 
@@ -64,25 +77,57 @@ npm run build
 ### 標準入出力トランスポートモード
 
 ```bash
+# npmスクリプト使用（dotenvx利用）
 npm run start:stdio
-# or
-npx dotenvx run -q -- "node dist/main.js --transport stdio"
+
+# 直接実行
+node dist/main.js --transport stdio
+
+# npx使用
+npx mcp-server-mattermost --transport stdio
 ```
 
 ### SSEトランスポートモード
 
 ```bash
+# npmスクリプト使用（dotenvx利用）
 npm run start:sse
-# or
-npx dotenvx run -q -- "node dist/main.js --transport sse"
+
+# 直接実行
+node dist/main.js --transport sse
 ```
 
 ### HTTPトランスポートモード
 
 ```bash
+# npmスクリプト使用（dotenvx利用）
 npm run start:http
-# or
-npx dotenvx run -q -- "node dist/main.js --transport http-stream"
+
+# 直接実行
+node dist/main.js --transport http-stream
+```
+
+## Claude Desktop連携
+
+このMCPサーバーをClaude Desktopで使用するには、Claude Desktopの設定に以下の設定を追加してください：
+
+### 設定サンプル
+
+```json
+{
+  "mcpServers": {
+    "mattermost": {
+      "command": "npx",
+      "args": ["mcp-server-mattermost", "--transport", "stdio"],
+      "env": {
+        "MATTERMOST_ENDPOINT": "https://your-mattermost-server.com",
+        "MATTERMOST_TOKEN": "your-token-here",
+        "MATTERMOST_TEAM": "your-team-name",
+        "MATTERMOST_CHANNELS": "general,random,dev"
+      }
+    }
+  }
+}
 ```
 
 ## 開発

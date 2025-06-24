@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-mattermost",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A Model Context Protocol server for Mattermost",
   "type": "module",
   "main": "dist/main.js",
@@ -35,7 +35,7 @@
     "mattermost",
     "fetch"
   ],
-  "author": "jp-yendo",
+  "author": "kakehashi",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

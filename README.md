@@ -16,8 +16,6 @@ This project implements a Model Context Protocol (MCP) server for Mattermost int
 
 - Node.js >= 22
 - npm >= 10
-- dotenvx
-  - [dotenvx](https://dotenvx.com/)
 
 ## Setup
 
@@ -36,20 +34,35 @@ npm install
 
 3. Set up your environment variables:
 
-```bash
-# Create .env file
-cp .env.example .env
-
-# Encrypt your .env file (optional but recommended for production)
-dotenvx encrypt
-```
-
-Required environment variables:
+### Required Environment Variables
 
 - `MATTERMOST_ENDPOINT`: Your Mattermost server URL
 - `MATTERMOST_TOKEN`: Your Mattermost authentication token
 - `MATTERMOST_TEAM`: The name of the team to monitor
 - `MATTERMOST_CHANNELS`: Comma-separated list of channel names to monitor
+
+### Environment Variable Setup Options
+
+#### Option 1: Direct Environment Variables
+```bash
+export MATTERMOST_ENDPOINT="https://your-mattermost-server.com"
+export MATTERMOST_TOKEN="your-token-here"
+export MATTERMOST_TEAM="your-team-name"
+export MATTERMOST_CHANNELS="general,random,dev"
+```
+
+#### Option 2: Using .env file (with dotenvx)
+```bash
+# Install dotenvx (optional)
+npm install -g @dotenvx/dotenvx
+
+# Create .env file
+cp .env.example .env
+# Edit .env file with your values
+
+# Encrypt your .env file (optional but recommended for production)
+dotenvx encrypt
+```
 
 4. Build the server:
 
@@ -64,25 +77,57 @@ The server supports three transport modes: stdio (default), sse, and http-stream
 ### Standard I/O Transport Mode
 
 ```bash
+# Using npm scripts (with dotenvx)
 npm run start:stdio
-# or
-npx dotenvx run -q -- "node dist/main.js --transport stdio"
+
+# Direct execution
+node dist/main.js --transport stdio
+
+# Using npx
+npx mcp-server-mattermost --transport stdio
 ```
 
 ### SSE Transport Mode
 
 ```bash
+# Using npm scripts (with dotenvx)
 npm run start:sse
-# or
-npx dotenvx run -q -- "node dist/main.js --transport sse"
+
+# Direct execution
+node dist/main.js --transport sse
 ```
 
 ### HTTP Transport Mode
 
 ```bash
+# Using npm scripts (with dotenvx)
 npm run start:http
-# or
-npx dotenvx run -q -- "node dist/main.js --transport http-stream"
+
+# Direct execution
+node dist/main.js --transport http-stream
+```
+
+## Claude Desktop Integration
+
+To use this MCP server with Claude Desktop, add the following configuration to your Claude Desktop settings:
+
+### Sample Configuration
+
+```json
+{
+  "mcpServers": {
+    "mattermost": {
+      "command": "npx",
+      "args": ["mcp-server-mattermost", "--transport", "stdio"],
+      "env": {
+        "MATTERMOST_ENDPOINT": "https://your-mattermost-server.com",
+        "MATTERMOST_TOKEN": "your-token-here",
+        "MATTERMOST_TEAM": "your-team-name",
+        "MATTERMOST_CHANNELS": "general,random,dev"
+      }
+    }
+  }
+}
 ```
 
 ## Development
