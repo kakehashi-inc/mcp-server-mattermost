@@ -277,17 +277,27 @@ export class MattermostClient {
     query: string,
     teamId: string,
     channelName: string | null,
+    before: string | undefined | null,
+    after: string | undefined | null,
+    on: string | undefined | null,
     limit = 100
   ): Promise<Message[]> {
     if (!this.initialized) {
       await this.init();
     }
 
-    let terms;
+    let terms = query;
     if (channelName) {
-      terms = `${query} in:${channelName}`;
-    } else {
-      terms = query;
+      terms += ` in:${channelName}`;
+    }
+    if (before) {
+      terms += ` before:${before}`;
+    }
+    if (after) {
+      terms += ` after:${after}`;
+    }
+    if (on) {
+      terms += ` on:${on}`;
     }
 
     const response = await this.client.post<{ posts: Record<string, Post> }>(
@@ -319,6 +329,9 @@ export class MattermostClient {
     query: string,
     teamName: string,
     channelName: string | null,
+    before: string | undefined | null,
+    after: string | undefined | null,
+    on: string | undefined | null,
     limit = 100
   ): Promise<Message[]> {
     if (!this.initialized) {
@@ -330,6 +343,6 @@ export class MattermostClient {
       throw new Error(`Team ${teamName} not found`);
     }
 
-    return this.searchMessages(query, team.id, channelName, limit);
+    return this.searchMessages(query, team.id, channelName, before, after, on, limit);
   }
 }

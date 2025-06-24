@@ -16,6 +16,9 @@ const parameters = {
     .describe(
       'List of channel names to fetch messages from. If not provided, uses the default channels.'
     ),
+  before: z.string().optional().describe('Search before this timestamp (yyyy-mm-dd).'),
+  after: z.string().optional().describe('Search after this timestamp (yyyy-mm-dd).'),
+  on: z.string().optional().describe('Search on this date (yyyy-mm-dd).'),
   limit: z
     .number()
     .min(1)
@@ -27,7 +30,7 @@ const parameters = {
 
 type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
-const execute = async ({ channels, limit, query }: Args) => {
+const execute = async ({ query, channels, before, after, on, limit }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
   const targetChannels = await client.getTargetChannelNames(channels, config.channels);
   const messageLimit = limit ?? config.limit;
@@ -40,14 +43,27 @@ const execute = async ({ channels, limit, query }: Args) => {
   }
 
   for (const channelName of targetChannels) {
+    let paramString = `query: ${query}`;
+    if (before) {
+      paramString += `, before: ${before}`;
+    }
+    if (after) {
+      paramString += `, after: ${after}`;
+    }
+    if (on) {
+      paramString += `, on: ${on}`;
+    }
     console.log(
-      `Searching messages from ${channelName} with query: ${query} (limit:${messageLimit.toString()})`
+      `Searching messages from ${channelName} with ${paramString} (limit:${messageLimit.toString()})`
     );
 
     const channelMessages: Message[] = await client.searchMessagesByName(
       query,
       config.team,
       channelName,
+      before,
+      after,
+      on,
       messageLimit
     );
 
