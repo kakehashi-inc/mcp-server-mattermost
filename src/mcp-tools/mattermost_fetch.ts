@@ -3,12 +3,11 @@ import { MattermostClient } from '../mattermost/client.js';
 import { config } from '../config/config.js';
 import type { Message } from '../mattermost/client.js';
 
-const name = 'mattermost_search';
+const name = 'mattermost_fetch';
 
-const description = 'Fetch messages from Mattermost channels with optional search functionality';
+const description = 'Fetch messages from Mattermost channels';
 
 const parameters = {
-  query: z.string().describe('Search query to filter messages.'),
   channels: z
     .array(z.string())
     .optional()
@@ -26,28 +25,17 @@ const parameters = {
 
 type Args = z.objectOutputType<typeof parameters, ZodTypeAny>;
 
-const execute = async ({ channels, limit, query }: Args) => {
+const execute = async ({ channels, limit }: Args) => {
   const client = new MattermostClient(config.endpoint, config.token);
   const targetChannels = channels ?? config.channels ?? [];
   const messageLimit = limit ?? config.limit;
 
   const messages: { type: 'text'; text: string }[] = [];
 
-  // クエリ未指定はエラーを返す
-  if (!query) {
-    throw new Error('Query is required');
-  }
-
   for (const channelName of targetChannels) {
-    console.log(
-      `Searching messages from ${channelName} with query: ${query} (limit:${messageLimit.toString()})`
-    );
+    console.log(`Fetching recent messages from ${channelName} (limit:${messageLimit.toString()})`);
 
-    const channelMessages: Message[] = await client.searchMessages(
-      query,
-      [channelName],
-      messageLimit
-    );
+    const channelMessages: Message[] = await client.getMessages(channelName, messageLimit);
 
     console.log(`Found ${channelMessages.length.toString()} messages`);
 
@@ -64,7 +52,7 @@ const execute = async ({ channels, limit, query }: Args) => {
   };
 };
 
-export const mattermostSearch = {
+export const mattermostFetch = {
   name,
   description,
   parameters,

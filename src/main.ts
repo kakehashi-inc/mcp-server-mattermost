@@ -7,6 +7,8 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import express, { Request, Response } from 'express';
 import { randomUUID } from 'crypto';
 import { config } from './config/config.js';
+import { mattermostChannels } from './mcp-tools/mattermost_channels.js';
+import { mattermostFetch } from './mcp-tools/mattermost_fetch.js';
 import { mattermostSearch } from './mcp-tools/mattermost_search.js';
 
 const mcp = new McpServer({
@@ -15,6 +17,18 @@ const mcp = new McpServer({
 });
 
 // MCPツールの登録
+mcp.tool(
+  mattermostChannels.name,
+  mattermostChannels.description,
+  mattermostChannels.parameters,
+  mattermostChannels.execute
+);
+mcp.tool(
+  mattermostFetch.name,
+  mattermostFetch.description,
+  mattermostFetch.parameters,
+  mattermostFetch.execute
+);
 mcp.tool(
   mattermostSearch.name,
   mattermostSearch.description,
