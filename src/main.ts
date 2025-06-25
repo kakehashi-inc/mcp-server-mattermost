@@ -10,6 +10,7 @@ import { config } from './config/config.js';
 import { mattermostChannels } from './mcp-tools/mattermost_channels.js';
 import { mattermostFetch } from './mcp-tools/mattermost_fetch.js';
 import { mattermostSearch } from './mcp-tools/mattermost_search.js';
+import { consoleWriter } from './utils/console-writer.js';
 
 const mcp = new McpServer({
   name: process.env.npm_package_name ?? 'mcp-server-mattermost',
@@ -38,12 +39,12 @@ mcp.tool(
 
 // クリーンアップ処理を行う関数
 async function cleanup(): Promise<void> {
-  console.log('Shutting down...');
+  consoleWriter.log('Shutting down...');
   try {
     // MCPサーバーのクリーンアップ
     await mcp.close();
   } catch (error: unknown) {
-    console.error('Error during cleanup:', error);
+    consoleWriter.error('Error during cleanup:', error);
   }
   process.exit(0);
 }
@@ -113,7 +114,7 @@ if (config.transport === 'http-stream') {
       // リクエストを処理
       await transport.handleRequest(req, res, req.body);
     } catch (error: unknown) {
-      console.error('Error handling MCP request:', error);
+      consoleWriter.error('Error handling MCP request:', error);
       if (!res.headersSent) {
         res.status(500).json({
           jsonrpc: '2.0',
@@ -143,7 +144,7 @@ if (config.transport === 'http-stream') {
       }
       await transport.handleRequest(req, res);
     } catch (error: unknown) {
-      console.error('Error handling GET request:', error);
+      consoleWriter.error('Error handling GET request:', error);
       if (!res.headersSent) {
         res.status(500).send('Internal server error');
       }
@@ -166,14 +167,14 @@ if (config.transport === 'http-stream') {
       }
       await transport.handleRequest(req, res);
     } catch (error: unknown) {
-      console.error('Error handling DELETE request:', error);
+      consoleWriter.error('Error handling DELETE request:', error);
       if (!res.headersSent) {
         res.status(500).send('Internal server error');
       }
     }
   });
 
-  console.log(`MCP Streamable HTTP Server is running on port ${config.port.toString()}`);
+  consoleWriter.log(`MCP Streamable HTTP Server is running on port ${config.port.toString()}`);
 
   app.listen(config.port);
 } else if (config.transport === 'sse') {
@@ -203,7 +204,7 @@ if (config.transport === 'http-stream') {
     }
   });
 
-  console.log(`MCP SSE Server is running on port ${config.port.toString()}`);
+  consoleWriter.log(`MCP SSE Server is running on port ${config.port.toString()}`);
 
   app.listen(config.port);
 } else {

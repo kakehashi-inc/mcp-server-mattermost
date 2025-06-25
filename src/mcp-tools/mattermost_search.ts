@@ -2,6 +2,7 @@ import { z, ZodTypeAny } from 'zod';
 import { MattermostClient } from '../mattermost/client.js';
 import { config } from '../config/config.js';
 import type { Message } from '../mattermost/client.js';
+import { consoleWriter } from '../utils/console-writer.js';
 
 const name = 'mattermost_search';
 
@@ -54,7 +55,7 @@ const execute = async ({ query, channels, before, after, on, limit }: Args) => {
       if (on) {
         paramString += `, on: ${on}`;
       }
-      console.log(
+      consoleWriter.log(
         `Searching messages from ${channelName} with ${paramString} (limit:${messageLimit.toString()})`
       );
     }
@@ -69,9 +70,7 @@ const execute = async ({ query, channels, before, after, on, limit }: Args) => {
       messageLimit
     );
 
-    if (config.transport !== 'stdio') {
-      console.log(`Found ${channelMessages.length.toString()} messages`);
-    }
+    consoleWriter.log(`Found ${channelMessages.length.toString()} messages`);
 
     messages.push({
       type: 'text' as const,
