@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
+import cacheManager from '../utils/cache-manager.js';
 
-export interface Channel {
+interface Channel {
   id: string;
   create_at: number;
   update_at: number;
@@ -18,7 +19,7 @@ export interface Channel {
   team_update_at: number;
 }
 
-export interface Message {
+interface Message {
   id: string;
   create_at: number;
   update_at: number;
@@ -98,8 +99,22 @@ export class MattermostClient {
       return;
     }
 
-    this.teams = await this._getTeams();
-    this.channels = await this._getChannels();
+    const teams = cacheManager.get('teams') as Team[] | null;
+    if (teams) {
+      this.teams = teams;
+    } else {
+      this.teams = await this._getTeams();
+      cacheManager.set('teams', this.teams, 60 * 60);
+    }
+
+    const channels = cacheManager.get('channels') as Channel[] | null;
+    if (channels) {
+      this.channels = channels;
+    } else {
+      this.channels = await this._getChannels();
+      cacheManager.set('channels', this.channels, 60 * 60);
+    }
+
     this.initialized = true;
   }
 
@@ -346,3 +361,5 @@ export class MattermostClient {
     return this.searchMessages(query, team.id, channelName, before, after, on, limit);
   }
 }
+
+export type { Channel, Message };
