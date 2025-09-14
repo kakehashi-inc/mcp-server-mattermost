@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from", "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context", "ide-assistant",
+        "--project", "."
+      ]
+    },
     "mattermost": {
       "url": "http://localhost:8201/sse"
     }
