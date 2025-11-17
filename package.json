@@ -43,7 +43,9 @@
   "files": [
     "dist",
     "README.md",
-    "README-ja.md"
+    "README-ja.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "bugs": {
     "url": "https://github.com/kakehashi-inc/mcp-server-mattermost/issues"
